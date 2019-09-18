@@ -158,8 +158,8 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/bundles")
-	public ResponseEntity<Object> getBundleByProductCode(@RequestParam("productCode") String productCode){
+	@GetMapping(value = "/bundles", params = "productCode")
+	public ResponseEntity<Object> getBundleByProductCode(@RequestParam String productCode){
 		
 		ArrayList<Bundle> bundles = new ArrayList<Bundle>();
 		Connection conn = null;  
@@ -193,5 +193,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
+	
+	
 	
 }
