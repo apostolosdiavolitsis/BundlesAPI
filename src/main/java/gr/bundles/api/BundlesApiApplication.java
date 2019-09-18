@@ -43,6 +43,27 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
 	
 	@RequestMapping(value = "/bundles", method = RequestMethod.POST)
 	public ResponseEntity<Object> createBundle(@RequestBody Bundle bundle){
+		
+		
+		//Check that the input follows the correct restrictions
+		//price defaults to 0.0
+		//active defaults to false
+		
+		//Check Product Name (cannot be null, should be between 1 and 100 characters)
+		if( bundle.getProductName() == null ||  bundle.getProductName().length() < 1 || bundle.getProductName().length() > 100) {
+			return new ResponseEntity<>("Please set a correct Product Name", HttpStatus.BAD_REQUEST);
+		}
+		
+		//Check Product Code (cannot be null)
+		if( bundle.getProductCode() == null) {
+			return new ResponseEntity<>("Please set a correct Product Code", HttpStatus.BAD_REQUEST);
+		}
+		
+		//Check Availability date (cannot be null)
+		if( bundle.getAvailabilityDate() == null) {
+			return new ResponseEntity<>("Please set a correct Availability date", HttpStatus.BAD_REQUEST);
+		}
+		
 		Connection conn = null;  
 		try {  
             // db parameters  
@@ -78,7 +99,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             conn.close();
               
         } catch (SQLException e) {  
-        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>("Product is created successfully", HttpStatus.CREATED);
 		
@@ -194,6 +215,40 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
 	
-	
+	@GetMapping(value = "/bundles", params = "order")
+	public ResponseEntity<Object> getBundlesOrderedByPrice(@RequestParam String order){
+		
+		ArrayList<Bundle> bundles = new ArrayList<Bundle>();
+		Connection conn = null;  
+		try {  
+            // db parameters  
+            String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/bundles.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            String sql = "SELECT * FROM bundles ORDER BY price "+order+"";
+            Statement stmt = conn.createStatement();  
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+            	Bundle bundle = new Bundle(rs.getString("productName"),rs.getFloat("price"),
+            			rs.getString("productCode"),rs.getString("productExpirationDate"),
+            			rs.getString("availabilityDate"),rs.getBoolean("active"));
+            	bundles.add(bundle);
+            }
+            
+            
+            //Close Connection
+            rs.close();
+            stmt.close();
+            conn.close();
+            
+            return new ResponseEntity<>(bundles, HttpStatus.OK);
+              
+        } catch (SQLException e) {  
+        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+		return new ResponseEntity<>(bundles, HttpStatus.OK);
+	}
 	
 }
