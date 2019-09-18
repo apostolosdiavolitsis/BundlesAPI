@@ -3,8 +3,10 @@ package gr.bundles.api;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -77,6 +79,42 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         }
 		return new ResponseEntity<>("Product is created successfully", HttpStatus.CREATED);
 		
+	}
+	@RequestMapping(value = "/bundles")
+	public ResponseEntity<Object> getBundles(){
+		
+		ArrayList<Bundle> bundles = new ArrayList<Bundle>();
+		
+		Connection conn = null;  
+		try {  
+            // db parameters  
+            String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/bundles.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            String sql = "SELECT * FROM bundles";
+            Statement stmt = conn.createStatement();  
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+            	Bundle bundle = new Bundle(rs.getString("productName"),rs.getFloat("price"),
+            			rs.getString("productCode"),rs.getString("productExpirationDate"),
+            			rs.getString("availabilityDate"),rs.getBoolean("active"));
+            	bundles.add(bundle);
+            }
+            
+            
+            //Close Connection
+            rs.close();
+            stmt.close();
+            conn.close();
+            
+            return new ResponseEntity<>(bundles, HttpStatus.OK);
+              
+        } catch (SQLException e) {  
+        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
 	
 }
