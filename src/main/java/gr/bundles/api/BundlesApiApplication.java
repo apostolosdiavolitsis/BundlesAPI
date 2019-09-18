@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -156,4 +157,42 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/bundles")
+	public ResponseEntity<Object> getBundleByProductCode(@RequestParam("productCode") String productCode){
+		
+		ArrayList<Bundle> bundles = new ArrayList<Bundle>();
+		System.out.println("test");
+		Connection conn = null;  
+		try {  
+            // db parameters  
+            String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/bundles.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            String sql = "SELECT * FROM bundles WHERE productCode LIKE '%"+productCode+"%'";
+            Statement stmt = conn.createStatement();  
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+            	Bundle bundle = new Bundle(rs.getString("productName"),rs.getFloat("price"),
+            			rs.getString("productCode"),rs.getString("productExpirationDate"),
+            			rs.getString("availabilityDate"),rs.getBoolean("active"));
+            	bundles.add(bundle);
+            }
+            
+            
+            //Close Connection
+            rs.close();
+            stmt.close();
+            conn.close();
+            
+            return new ResponseEntity<>(bundles, HttpStatus.OK);
+              
+        } catch (SQLException e) {  
+        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+		return new ResponseEntity<>(bundles, HttpStatus.OK);
+	}
+	
 }
