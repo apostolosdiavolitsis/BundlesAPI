@@ -162,7 +162,6 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
 	public ResponseEntity<Object> getBundleByProductCode(@RequestParam("productCode") String productCode){
 		
 		ArrayList<Bundle> bundles = new ArrayList<Bundle>();
-		System.out.println("test");
 		Connection conn = null;  
 		try {  
             // db parameters  
