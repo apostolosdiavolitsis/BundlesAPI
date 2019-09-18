@@ -14,6 +14,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -300,6 +301,35 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>("Product was update successfully", HttpStatus.ACCEPTED);
+		
+	}
+	
+	@DeleteMapping(value = "/bundles/{productName}")
+	public ResponseEntity<Object> updateBundle(@PathVariable("productName") String productName){
+				
+		Connection conn = null;  
+		try {  
+            // db parameters  
+            String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/bundles.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            String sql = "DELETE FROM bundles WHERE productName LIKE ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, productName);
+            
+            pstmt.executeUpdate();
+            
+            //Close Connection
+            pstmt.close();
+            conn.close();
+              
+        } catch (SQLException e) {  
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+		return new ResponseEntity<>("Product was update successfully", HttpStatus.OK);
 		
 	}
 	
