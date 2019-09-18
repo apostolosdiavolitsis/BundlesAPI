@@ -288,7 +288,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             pstmt.setString(3, bundle.getProductExpirationDate());
             pstmt.setString(4, bundle.getAvailabilityDate());
             pstmt.setBoolean(5, bundle.isActive());
-            pstmt.setString(6, "%"+bundle.getProductName()+"%");
+            pstmt.setString(6, bundle.getProductName());
             
             pstmt.executeUpdate();
             
