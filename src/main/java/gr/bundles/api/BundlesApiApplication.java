@@ -133,10 +133,9 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             stmt.close();
             conn.close();
             
-            return new ResponseEntity<>(bundles, HttpStatus.OK);
               
         } catch (SQLException e) {  
-        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
@@ -171,10 +170,9 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             stmt.close();
             conn.close();
             
-            return new ResponseEntity<>(bundles, HttpStatus.OK);
               
         } catch (SQLException e) {  
-        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
@@ -207,10 +205,9 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             stmt.close();
             conn.close();
             
-            return new ResponseEntity<>(bundles, HttpStatus.OK);
               
         } catch (SQLException e) {  
-        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
@@ -243,10 +240,9 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
             stmt.close();
             conn.close();
             
-            return new ResponseEntity<>(bundles, HttpStatus.OK);
               
         } catch (SQLException e) {  
-        	new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
 	}
