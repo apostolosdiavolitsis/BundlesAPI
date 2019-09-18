@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -245,6 +246,61 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
 		return new ResponseEntity<>(bundles, HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/bundles/{productName}")
+	public ResponseEntity<Object> updateBundle(@PathVariable("productName") String productName, @RequestBody Bundle bundle){
+		
+		bundle.setProductName(productName);
+		
+		//Check that the input follows the correct restrictions
+		//price defaults to 0.0
+		//active defaults to false
+		
+		//Check Product Name (cannot be null, should be between 1 and 100 characters)
+		if( bundle.getProductName() == null ||  bundle.getProductName().length() < 1 || bundle.getProductName().length() > 100) {
+			return new ResponseEntity<>("Please set a correct Product Name", HttpStatus.BAD_REQUEST);
+		}
+		
+		//Check Product Code (cannot be null)
+		if( bundle.getProductCode() == null) {
+			return new ResponseEntity<>("Please set a correct Product Code", HttpStatus.BAD_REQUEST);
+		}
+		
+		//Check Availability date (cannot be null)
+		if( bundle.getAvailabilityDate() == null) {
+			return new ResponseEntity<>("Please set a correct Availability date", HttpStatus.BAD_REQUEST);
+		}
+		
+		Connection conn = null;  
+		try {  
+            // db parameters  
+            String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/bundles.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            String sql = "UPDATE bundles SET price = ?, productCode = ?, productExpirationDate = ?, availabilityDate = ?, active = ? WHERE productName LIKE ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setFloat(1, bundle.getPrice());
+            pstmt.setString(2, bundle.getProductCode());
+            pstmt.setString(3, bundle.getProductExpirationDate());
+            pstmt.setString(4, bundle.getAvailabilityDate());
+            pstmt.setBoolean(5, bundle.isActive());
+            pstmt.setString(6, "%"+bundle.getProductName()+"%");
+            
+            pstmt.executeUpdate();
+            
+            //Close Connection
+            pstmt.close();
+            conn.close();
+              
+        } catch (SQLException e) {  
+        	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+		return new ResponseEntity<>("Product was update successfully", HttpStatus.ACCEPTED);
+		
 	}
 	
 }
