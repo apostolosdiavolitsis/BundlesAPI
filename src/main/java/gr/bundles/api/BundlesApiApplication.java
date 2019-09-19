@@ -103,7 +103,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         } catch (SQLException e) {  
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
-		return new ResponseEntity<>("Product is created successfully", HttpStatus.CREATED);
+		return new ResponseEntity<>("Bundle created successfully", HttpStatus.CREATED);
 		
 	}
 	@RequestMapping(value = "/bundles")
@@ -329,7 +329,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         } catch (SQLException e) {  
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
-		return new ResponseEntity<>("Product was update successfully", HttpStatus.OK);
+		return new ResponseEntity<>("Bundle updated successfully", HttpStatus.OK);
 		
 	}
 	
