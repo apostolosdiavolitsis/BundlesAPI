@@ -305,7 +305,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
 	}
 	
 	@DeleteMapping(value = "/bundles/{productName}")
-	public ResponseEntity<Object> updateBundle(@PathVariable("productName") String productName){
+	public ResponseEntity<Object> deleteBundle(@PathVariable("productName") String productName){
 				
 		Connection conn = null;  
 		try {  
