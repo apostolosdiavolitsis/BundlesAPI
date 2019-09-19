@@ -300,7 +300,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         } catch (SQLException e) {  
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
-		return new ResponseEntity<>("Product was update successfully", HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("Bundle updated successfully", HttpStatus.ACCEPTED);
 		
 	}
 	
@@ -329,7 +329,7 @@ public class BundlesApiApplication extends SpringBootServletInitializer{
         } catch (SQLException e) {  
         	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); 
         }
-		return new ResponseEntity<>("Bundle updated successfully", HttpStatus.OK);
+		return new ResponseEntity<>("Bundle deleted successfully", HttpStatus.OK);
 		
 	}
 	
